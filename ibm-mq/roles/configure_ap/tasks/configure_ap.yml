@@ -1,0 +1,8 @@
+---
+
+- name: Setup Active Passive on MQ server from the script.
+  become: yes
+  become_user: mqm
+  ansible.builtin.shell: sudo sh active_passive_config.sh 
+  args:
+    chdir: "{{ IBM_MQ_SOURCE_DIR }}/MQ-Scripts/"

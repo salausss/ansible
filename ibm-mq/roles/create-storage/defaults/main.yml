@@ -1,0 +1,12 @@
+## --- EFS Variables --- ##
+
+aws_region: "us-east-2"
+aws_access_key: "AKIA6IIIF4YUB4WO6F5S"
+aws_secret_key: "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"
+aws_subnet_id: "subnet-02098df254ce3d91b"
+security_groups: [ sg-00ecb0dcead71c16c ]
+efs_size_gb: 20
+efs_tags:
+  Name: "MQHA"
+efs_mount_dir: "/mnt/efs"
+efs_mount_options: "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport"

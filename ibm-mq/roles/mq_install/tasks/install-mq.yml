@@ -1,0 +1,26 @@
+---
+- name: Check if package is installed
+  shell:
+    cmd: rpm -qa |grep MQSeriesWeb_MQ92
+  register: rpm_check_result
+  ignore_errors: true
+
+- name: Create MQ Package.
+  become: yes
+  become_user: mqm
+  ansible.builtin.shell: echo 5 | sudo sh installMQ92.sh
+  args:
+    chdir: "{{ IBM_MQ_SOURCE_DIR }}/MQ/"
+  ignore_errors: true
+  when: not mqpackage.stat.exists 
+
+- name: Execute the MQ installation script.
+  become: yes
+  become_user: mqm
+  ansible.builtin.shell: echo 1 | sudo sh MQ-Scripts/installMQ92.sh
+  args:
+    chdir: "{{ IBM_MQ_SOURCE_DIR }}"
+  when: rpm_check_result != 0
+  
+- name: Reset ssh connection
+  ansible.builtin.meta: reset_connection

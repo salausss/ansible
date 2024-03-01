@@ -1,0 +1,6 @@
+#
+# The main task file for setting up the installation of IBM MQ
+#
+---
+- name: Set up Operating System
+  include_tasks: setup_os.yml

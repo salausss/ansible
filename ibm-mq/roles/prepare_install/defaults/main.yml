@@ -1,0 +1,20 @@
+#
+## Default variables for preparing to install
+#
+---
+## [TO-DO] Review all variables are proper "default" values
+## --- Common Variables --- ##
+java_home: /opt/mqm/java/jre64/jre
+mq_user: mqm
+IBM_MQ_INSTALL_DIR: /opt/mqm
+IBM_MQ_SOURCE_DIR: /home/mqm/MQ9/MQServer
+tmp_dir: /tmp
+logs_dir: "/var/mqm/log"
+IBM_ACE_INSTALL_DIR: /opt/IBM
+qmgrs_dir: /MQHA/qmgrs
+qmgrs_log_dir: /MQHA/logs
+
+# ulimit_file_size: The file size limit to set using 'ulimit -f'. This limit is expressed in bytes.
+ulimit_file_size: 4194304
+
+

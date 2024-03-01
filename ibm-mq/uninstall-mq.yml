@@ -1,0 +1,8 @@
+---
+- hosts: hosts
+  name: Uninstall MQ Web Server
+  become: true
+
+  roles:
+    - role: stopmq
+    - role: uninstall-mq

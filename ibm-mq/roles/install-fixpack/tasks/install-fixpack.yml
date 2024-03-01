@@ -1,0 +1,8 @@
+---
+- name: install Fix Pack MQ from the script.
+  become: yes
+  become_user: mqm
+  ansible.builtin.shell: echo 2 | sudo sh MQ-Scripts/installMQ92.sh
+  args:
+    chdir: "{{ IBM_MQ_SOURCE_DIR }}"
+  

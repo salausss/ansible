@@ -1,0 +1,97 @@
+#
+# This task file with setup the operating system with required packages and software
+#
+---
+# Install any required YUM packages for IIM, MQ, etc.
+- name: Install Yum Pre-Requisites
+  ansible.builtin.yum:
+    name: ['rpm-build','createrepo','unzip', 'tar', 'wget','jq']
+    state: present
+  when: ansible_os_family == "RedHat"
+
+# Create the source directory to store the binaries
+- name: Create Source directory
+  ansible.builtin.file: 
+    path: "{{ IBM_MQ_SOURCE_DIR }}" 
+    state: directory 
+    owner: mqm
+    group: mqm
+    mode: 0775
+    recurse: yes
+
+# Create the MQHA qmgrs directory to store the binaries
+- name: Create MQHA qmgrs directory
+  ansible.builtin.file:
+    path: "{{ qmgrs_dir }}"
+    state: directory
+    owner: mqm
+    group: mqm
+    mode: 0775
+    recurse: yes
+
+# Create the MQHA log directory to store the binaries
+- name: Create MQHA log directory
+  ansible.builtin.file:
+    path: "{{ qmgrs_log_dir }}"
+    state: directory
+    owner: mqm
+    group: mqm
+    mode: 0775
+    recurse: yes
+
+      
+# Create the Install directory 
+- name: Create Install directory
+  ansible.builtin.file: 
+    path: "{{ IBM_MQ_INSTALL_DIR }}" 
+    state: directory 
+    owner: mqm
+    group: mqm  
+    mode: 0755
+    recurse: yes
+
+# Create ACE install Directory
+
+- name: Create ACE Install directory
+  ansible.builtin.file: 
+    path: "{{ IBM_ACE_INSTALL_DIR }}" 
+    state: directory
+    owner: mqsi
+    group: mqsi 
+    mode: 0755
+    recurse: yes
+
+# Create the temporary location for logs
+- name: Create Tmp Binaries directory
+  ansible.builtin.file: 
+    path: "{{ logs_dir }}" 
+    state: directory 
+    owner: mqm
+    group: mqm
+    mode: 0755
+    recurse: yes
+
+## [TO-DO] - Determine if windows machines have a pre-step required here
+## [TO-DO] - Determine if any Mount Points need set up or general file directories (home/media/ibm_media/solaris/Sparc64/was)
+
+#
+# This task file checks if the system is setup with required software, binaries,
+# and the installation manager is installed
+#
+
+# Set the file size limit
+- name: Set the file size limit
+  command: ulimit -f {{ ulimit_file_size }}
+
+# Configure limits.conf for Prod environment.
+- name: Configure limits.conf for Prod
+  ##hosts: mq_server
+  # Task to configure the limits.conf file
+  # It uses a template (limits.prod.conf.j2) to generate the content
+  # and places it at /etc/security/limits.conf
+  template:
+    src: limits.prod.conf.j2
+    dest: /etc/security/limits.conf
+    mode: '0777'
+  register: limit_change
+

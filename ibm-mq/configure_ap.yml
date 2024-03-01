@@ -1,0 +1,9 @@
+---
+- hosts: hosts
+  name: Setup Environment
+  become: true
+  become_user: mqm
+  environment:
+    PATH: /opt/mqm/bin:{{ ansible_env.PATH }}
+  roles:
+    - role: stopmq

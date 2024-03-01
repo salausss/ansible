@@ -1,0 +1,18 @@
+#
+## all.yaml for IBM MQ
+#
+---
+## --- Common Variables --- ##
+tmp_dir: /tmp
+logs_dir: "/var/mqm/log"
+
+## --- MQ Variables --- ##
+
+IBM_MQ_SOURCE_DIR: /home/mqm/MQ9/MQServer
+IBM_MQ_INSTALL_DIR: /opt/mqm
+JAVA_HOME: /opt/mq/java/jre64/jre
+PATH: $PATH:/opt/mq/bin:/opt/mq/java/jre64/jre/bin
+qmgrs_dir: /MQHA/qmgrs
+qmgrs_log_dir: /MQHA/logs
+
+

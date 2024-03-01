@@ -1,0 +1,9 @@
+## This file will install the IBM-ACE on the server.
+
+- name: Execute the ACE installation script.
+  become: true
+  become_user: mqsi
+  ansible.builtin.shell: sudo sh ACEInstall.sh
+  args:
+    chdir: "{{ IBM_MQ_SOURCE_DIR }}/MQ-Scripts/"
+  when: not ace_path.stat.exists

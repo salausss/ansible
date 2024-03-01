@@ -1,0 +1,2 @@
+---
+mqsc_local: "{{IBM_MQ_SOURCE_DIR}}/MQ-Scripts/P001Q01.mqsc"

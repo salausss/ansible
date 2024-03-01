@@ -1,0 +1,65 @@
+---
+- name: Ensure NFS utilities are installed
+  package:
+    name: nfs-utils
+    state: present
+
+- name: Create mount point for EFS
+  file:
+    path: "{{ efs_mount_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Install boto3
+  pip:
+     name: boto3
+     state: present
+
+- name: EFS provisioning
+  community.aws.efs:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    region: "{{ aws_region }}"
+    state: present
+    name: MQHA_test
+    tags:
+      Name: MQHA_test
+      purpose: file-storage
+    targets:
+      - subnet_id: "{{ aws_subnet_id  }}"
+        security_groups:  "{{ security_groups }}"
+  register: efs_info
+
+- name: Save EFS provisioning details in file 
+  copy:
+    content: "{{ efs_info  }}"
+    dest: "{{ IBM_MQ_SOURCE_DIR }}/efs_fs_id.txt"
+
+- name: Read details of efs
+  ansible.builtin.shell: |
+    jq .efs efs_fs_id.txt > efs.text
+    jq -r '.file_system_id' efs.text > fs_id.txt
+    #EFS_ID=`jq -r '.file_system_id' efs.text`
+  args:
+    chdir: "{{ IBM_MQ_SOURCE_DIR }}" 
+  register: efs_fs
+
+      #- debug:
+        #msg: efs_fs
+
+
+      #- name: Set facts for EFS ID
+      #set_fact:
+    ##efs_id: "{{ _efs_info.ansible_facts.efs[0].file_system_id }}"
+    #efs_id: " fs_id.txt"
+
+- name: Ensure EFS volume is mounted.
+  vars:
+    efs_id: "{{ lookup('file', '/home/mqm/MQ9/MQServer/fs_id.txt') }}"
+  mount:
+    path: "{{ efs_mount_dir }}"
+    src: "{{ efs_id }}.efs.{{ aws_region }}.amazonaws.com:/"
+    fstype: nfs4
+      #opts: nfsvers=4.1
+    opts: "rw,nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport"
+    state: mounted

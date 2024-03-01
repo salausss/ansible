@@ -1,0 +1,8 @@
+---
+- hosts: hosts
+  name: Setup Environment
+  become: true
+
+  roles:
+    #- role: startmq
+    - role: mq_install

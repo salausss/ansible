@@ -1,0 +1,7 @@
+---
+- hosts: hosts
+  name: Setup Environment
+  become: true
+
+  roles:
+    - role: stopmq

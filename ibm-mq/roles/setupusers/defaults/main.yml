@@ -1,0 +1,11 @@
+---
+##Variables for MQ user
+mqm_home: /home/mqm
+mqm_profile: .profile
+mqm_shell: /bin/bash
+
+##Variabled for ACE user
+mqsi_home: /var/mqmsi
+mqsi_profile: .profile
+mqsi_shell: /bin/bash
+

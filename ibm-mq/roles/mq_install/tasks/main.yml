@@ -1,0 +1,13 @@
+#
+## This task files completes the initial setup of the server for IBM MQ
+#
+---
+
+- name: Check the System for Installed Software
+  include_tasks: system_check.yml
+
+- name: Install MQ
+  include_tasks: install-mq.yml
+
+    #- name: Install ACE
+    #include_tasks: install-ace.yml

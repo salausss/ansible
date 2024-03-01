@@ -1,0 +1,39 @@
+---
+- name: Create mqm group
+  ansible.builtin.group:
+    name: mqm
+
+- name: Create mqsi group
+  ansible.builtin.group:
+    name: mqsi
+
+- name: Create mqm user for MQ install
+  ansible.builtin.user:
+    name: mqm
+    group: mqm
+    home: "{{ mqm_home }}"
+    shell: "{{ mqm_shell }}"
+
+- name: Create mqsi user for ACE install
+  ansible.builtin.user:
+    name: mqsi
+    group: mqsi
+    home: "{{ mqsi_home }}"
+    shell: "{{ mqsi_shell }}"
+
+- name: adding existing user to group sudo
+  user:
+    name: mqsi
+    groups: mqm
+    append: yes
+  become: yes
+
+- name: Give sudo access to mqm and mqsi group
+  lineinfile:
+     dest: /etc/sudoers
+     state: present
+     regexp: '^%mqm'
+     line: '%mqm ALL=(ALL) NOPASSWD: ALL'
+     regexp: '^%mqsi'
+     line: '%mqsi ALL=(ALL) NOPASSWD: ALL'
+     validate: 'visudo -cf %s'

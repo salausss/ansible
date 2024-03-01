@@ -1,0 +1,4 @@
+---
+
+- name: Start MQ server from the script
+  ansible.builtin.include_tasks: configure_ap.yml

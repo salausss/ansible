@@ -1,0 +1,56 @@
+#
+# This task file checks if the system is setup with required software, binaries,
+# and the installation manager is installed
+#
+## Extract the TAR & Scripts 
+- name: Extract MQ tar into Source directory
+  ansible.builtin.unarchive:
+    src: "{{ IBM_MQ_SOURCE_DIR }}/IBM_MQ_9.2.0_LINUX_X86-64.tar"
+    dest: "{{ IBM_MQ_SOURCE_DIR }}/"
+
+- name: Extract MQ script into install directory
+  ansible.builtin.unarchive:
+    src: "{{ IBM_MQ_SOURCE_DIR }}/MQ-Scripts.zip"
+    dest: "{{ IBM_MQ_SOURCE_DIR }}/"
+
+- name: Assign required permissions
+  ansible.builtin.file:
+    path: "{{ IBM_MQ_SOURCE_DIR }}"
+    owner: mqm
+    mode: 0755
+    recurse: true
+
+## Verify MQ installation script path
+- name: Verify the MQ script path
+  stat:
+    path: "{{ IBM_MQ_SOURCE_DIR }}/MQ-Scripts/installMQ92.sh"
+  register: mq_result
+
+- name: Verify the MQ script
+  ansible.builtin.fail: 
+    msg: "installMQ92.sh script not found, aborting operation"
+  when: not mq_result.stat.exists
+
+- name: Verify  license status file exists
+  ansible.builtin.stat:
+    path: "{{ IBM_MQ_SOURCE_DIR }}/MQ-Scripts/mqlicense.sh"
+  register: license_status
+
+- name: Verify MQ packages are already created
+  stat:
+    path: /home/mqm/MQ9/MQServer/mq_rpms
+  register: mqpackage
+
+## Verify ACE installation script path
+- name: Verify the ACE script path
+  stat:
+    path: "{{ IBM_MQ_SOURCE_DIR }}/MQ-Scripts/ACEInstall.sh"
+  register: ace_result
+
+## Verify if ACE package is already installed
+ 
+- name: Verify if ACE package is already installed
+  stat: 
+    path: /opt/IBM/ace-12.0.5.0/ace
+  register: ace_path
+   

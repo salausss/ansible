@@ -1,0 +1,31 @@
+## This playbook will reference specific roles that will perform the install of IBM MQ
+---
+- hosts: hosts
+  name: Setup Environment
+  become: true
+
+  tasks:
+    - name: Load Proper Environment Variables
+      ansible.builtin.include_vars: "{{ lookup('ansible.builtin.first_found', files) }}"
+      vars:
+        files:
+          - group_vars/all.yaml
+  roles:
+    - role: create-storage
+    - role: setupusers
+    - role: prepare_install
+    - role: mq_install
+
+### Setup configuration for MQ Server
+
+- hosts: hosts
+  serial: 1
+  become: true
+  become_user: mqm
+  environment:
+    PATH: /opt/mqm/bin:{{ ansible_env.PATH }}
+
+  roles:
+    - role: getconfig
+      vars:
+        mqsc_local: "{{ IBM_MQ_SOURCE_DIR }}/MQ-Scripts/P001Q01.mqs"

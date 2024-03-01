@@ -1,0 +1,7 @@
+#
+## This task files completes the initial setup of the server for IBM MQ
+#
+---
+- name: Uninstall MQ
+  include_tasks: uninstall-mq.yml
+
